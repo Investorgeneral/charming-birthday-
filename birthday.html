@@ -33,23 +33,10 @@
       z-index: 2;
       position: relative;
     }
-    h1 {
-      font-size: 2.5rem;
-      margin-bottom: 15px;
-    }
-    h2 {
-      font-size: 1.5rem;
-      margin-bottom: 20px;
-    }
-    p {
-      font-size: 1.2rem;
-      line-height: 1.6;
-    }
-    .emoji {
-      font-size: 3rem;
-      margin-top: 20px;
-      animation: bounce 1.5s infinite;
-    }
+    h1 { font-size: 2.5rem; margin-bottom: 15px; }
+    h2 { font-size: 1.5rem; margin-bottom: 20px; }
+    p { font-size: 1.2rem; line-height: 1.6; }
+    .emoji { font-size: 3rem; margin-top: 20px; animation: bounce 1.5s infinite; }
     @keyframes bounce {
       0%, 100% { transform: translateY(0); }
       50% { transform: translateY(-10px); }
@@ -63,6 +50,27 @@
       height: 100%;
       z-index: 1;
     }
+    button {
+      padding: 10px 20px;
+      margin-top: 15px;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      cursor: pointer;
+      background: #ffcc00;
+      color: #333;
+      font-weight: bold;
+    }
+    #wishBox {
+      margin-top: 20px;
+    }
+    #messages {
+      margin-top: 15px;
+      font-size: 1rem;
+      background: rgba(255,255,255,0.2);
+      padding: 10px;
+      border-radius: 10px;
+    }
   </style>
 </head>
 <body>
@@ -75,20 +83,39 @@
       Happy <span id="age"></span> Birthday 🥳
     </p>
     <div class="emoji">🎉🎁🎊</div>
+
+    <!-- Button to trigger interaction -->
+    <button id="celebrateBtn">Click to Celebrate 🎶</button>
+
+    <!-- Wish input -->
+    <div id="wishBox">
+      <input type="text" id="wishInput" placeholder="Type your wish..." />
+      <button id="wishBtn">Send Wish 💌</button>
+      <div id="messages"></div>
+    </div>
   </div>
 
   <!-- Background Music -->
-  <audio autoplay loop>
+  <audio id="bgMusic" loop>
     <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
     Your browser does not support the audio tag.
   </audio>
 
   <script>
-    // Set Charming's age
-    const age = 22; 
+    // Age
+    const age = 22;
     document.getElementById("age").innerText = age + "ᵗʰ";
 
-    // Confetti Animation
+    // Music control
+    const music = document.getElementById("bgMusic");
+    const btn = document.getElementById("celebrateBtn");
+
+    btn.addEventListener("click", () => {
+      music.play();
+      burstConfetti();
+    });
+
+    // Confetti
     const canvas = document.getElementById("confetti");
     const ctx = canvas.getContext("2d");
     let particles = [];
@@ -130,10 +157,27 @@
       requestAnimationFrame(updateParticles);
     }
 
-    for (let i = 0; i < 150; i++) {
-      particles.push(createParticle());
+    function burstConfetti() {
+      particles = [];
+      for (let i = 0; i < 200; i++) {
+        particles.push(createParticle());
+      }
+      updateParticles();
     }
-    updateParticles();
+
+    // Wishes
+    const wishBtn = document.getElementById("wishBtn");
+    const wishInput = document.getElementById("wishInput");
+    const messages = document.getElementById("messages");
+
+    wishBtn.addEventListener("click", () => {
+      if (wishInput.value.trim() !== "") {
+        const p = document.createElement("p");
+        p.textContent = "💌 " + wishInput.value;
+        messages.appendChild(p);
+        wishInput.value = "";
+      }
+    });
   </script>
 </body>
 </html>
